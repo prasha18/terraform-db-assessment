@@ -12,7 +12,6 @@ terraform.tfvars
 .vscode/
 
 # Backup files
-backups/
 
 # Environment
 .env
