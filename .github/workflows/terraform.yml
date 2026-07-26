@@ -14,8 +14,12 @@ jobs:
       contents: read
       pull-requests: write
 
+    defaults:
+      run:
+        shell: bash
+
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup Terraform
@@ -30,6 +34,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Verify AWS Credentials
+        run: |
+          aws --version
+          aws sts get-caller-identity
+
+      - name: Terraform Version
+        run: terraform version
+
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
 
@@ -43,8 +55,10 @@ jobs:
 
       - name: Terraform Plan
         working-directory: infra/envs/dev
+        env:
+          TF_LOG: INFO
         run: |
-          terraform plan -no-color -refresh=false -out=tfplan
+          terraform plan -refresh=false -no-color -out=tfplan
           terraform show -no-color tfplan > plan_output.txt
 
       - name: Upload Terraform Plan
