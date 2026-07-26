@@ -9,19 +9,20 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
 
+    env:
+      TF_VAR_aws_region: ap-south-1
+      TF_VAR_environment: dev
+
     defaults:
       run:
         working-directory: infra/envs/dev
 
     steps:
-
       - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.8.5
 
       - name: Terraform Format
         run: terraform fmt -check -recursive
