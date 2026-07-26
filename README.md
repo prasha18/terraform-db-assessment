@@ -38,3 +38,37 @@ created_at is a range filter.
 The composite index allows PostgreSQL to quickly locate rows that match both conditions before performing the aggregation.
 
 For this assessment's dataset (100 rows), PostgreSQL may still choose a sequential scan because scanning the entire table is inexpensive. With larger datasets, the composite index significantly reduces the number of rows that must be scanned.
+
+
+## Backup
+
+Run:
+
+```bash
+./scripts/backup.sh
+```
+
+A timestamped SQL backup is created in /home/ubuntu/terraform-db-assessment/database/backups/.
+
+## Restore
+
+Run:
+
+```bash
+./scripts/restore.sh /home/ubuntu/terraform-db-assessment/database/backups/<backup-file>.sql
+```
+
+## Verify
+
+Connect to the restored database:
+
+```bash
+psql -h localhost -U postgres -d hoteldb_restore
+```
+
+Verify the data:
+
+```sql
+SELECT COUNT(*) FROM hotel_bookings;
+SELECT COUNT(*) FROM booking_events;
+```
