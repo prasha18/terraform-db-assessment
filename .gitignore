@@ -1,0 +1,21 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+terraform.tfvars
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Backup files
+backups/
+
+# Environment
+.env
+
+# Logs
+*.log
