@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 3S2fPkHqYbR8wXV7ggTKYNt5NGEn0z1ghhpMoEVlI8Zb6crAC5QWpctOh09Gf2g
+\restrict vqau3uyVh5rBrw5eHfLSJLNZ8wxRfhAznwUJebcakVXJhC2dc2hVjRr0HIqXUGx
 
 -- Dumped from database version 16.14 (Debian 16.14-1.pgdg13+1)
 -- Dumped by pg_dump version 18.4 (Ubuntu 18.4-0ubuntu0.26.04.1)
@@ -295,5 +295,5 @@ CREATE INDEX idx_hotel_bookings_city_created ON public.hotel_bookings USING btre
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 3S2fPkHqYbR8wXV7ggTKYNt5NGEn0z1ghhpMoEVlI8Zb6crAC5QWpctOh09Gf2g
+\unrestrict vqau3uyVh5rBrw5eHfLSJLNZ8wxRfhAznwUJebcakVXJhC2dc2hVjRr0HIqXUGx
 
