@@ -72,4 +72,4 @@ Verify the data:
 SELECT COUNT(*) FROM hotel_bookings;
 SELECT COUNT(*) FROM booking_events;
 ```
-completedd
+completed
