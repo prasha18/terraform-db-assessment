@@ -1,4 +1,4 @@
-name: "Terraform CI"
+name: Terraform CI
 
 on:
   pull_request:
@@ -7,15 +7,10 @@ on:
 
 jobs:
   terraform:
-    name: "Terraform Format, Init, Validate & Plan"
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: read
-      pull-requests: write
-
     steps:
-      - name: Checkout Code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Terraform
@@ -23,23 +18,20 @@ jobs:
         with:
           terraform_version: 1.15.8
 
-      - name: Terraform Format Check
+      - name: Terraform Format
         run: terraform fmt -check -recursive
 
       - name: Terraform Init
-        run: |
-          cd infra/envs/dev
-          terraform init -reconfigure
+        working-directory: infra/envs/dev
+        run: terraform init -reconfigure
 
       - name: Terraform Validate
-        run: |
-          cd infra/envs/dev
-          terraform validate
+        working-directory: infra/envs/dev
+        run: terraform validate
 
       - name: Terraform Plan
-        id: plan
+        working-directory: infra/envs/dev
         run: |
-          cd infra/envs/dev
           terraform plan -no-color -refresh=false -out=tfplan
           terraform show -no-color tfplan > plan_output.txt
 
@@ -48,27 +40,3 @@ jobs:
         with:
           name: terraform-plan
           path: infra/envs/dev/plan_output.txt
-
-      - name: Comment PR with Plan
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const plan = fs.readFileSync('infra/envs/dev/plan_output.txt', 'utf8');
-
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `## Terraform Plan
-
-<details>
-<summary>Show Plan</summary>
-
-\`\`\`terraform
-${plan.substring(0, 60000)}
-\`\`\`
-
-</details>`
-            });
