@@ -1,9 +1,11 @@
-variable "aws_region" {
-  description = "AWS Region"
-  type        = string
-}
-
-variable "environment" {
-  description = "Environment name"
-  type        = string
-}
+variable "aws_region" { type = string }
+variable "env" { type = string }
+variable "vpc_cidr" { type = string }
+variable "public_subnet_cidrs" { type = list(string) }
+variable "private_subnet_cidrs" { type = list(string) }
+variable "availability_zones" { type = list(string) }
+variable "container_cpu" { type = number }
+variable "container_memory" { type = number }
+variable "db_instance_class" { type = string }
+variable "backup_retention_period" { type = number }
+variable "deletion_protection" { type = bool }

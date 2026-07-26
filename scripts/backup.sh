@@ -6,7 +6,7 @@ DB_HOST="localhost"
 DB_PORT="5432"
 DB_NAME="hoteldb"
 DB_USER="postgres"
-BACKUP_DIR="/home/ubuntu/terraform-db-assessment/database/backups"
+BACKUP_DIR="./database/backups"
 
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 
