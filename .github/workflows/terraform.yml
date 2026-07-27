@@ -20,6 +20,7 @@ jobs:
 
     env:
       AWS_REGION: us-east-1
+      TF_IN_AUTOMATION: true
 
     steps:
       - name: Checkout Repository
@@ -42,25 +43,40 @@ jobs:
           aws --version
           aws sts get-caller-identity
 
+      - name: Terraform Version
+        run: terraform version
+
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
 
       - name: Terraform Init
         working-directory: infra/envs/dev
-        run: terraform init -reconfigure
+        run: |
+          terraform init -reconfigure
 
       - name: Terraform Validate
         working-directory: infra/envs/dev
-        run: terraform validate
+        run: |
+          terraform validate
+
+      - name: Show Terraform Providers
+        working-directory: infra/envs/dev
+        run: |
+          terraform providers
 
       - name: Terraform Plan
         working-directory: infra/envs/dev
         env:
-          TF_LOG: DEBUG
+          TF_LOG: TRACE
           TF_LOG_PATH: terraform.log
         run: |
-          terraform plan -refresh=false -no-color
-          terraform plan -refresh=false -no-color -out=tfplan
+          terraform plan \
+            -input=false \
+            -lock=false \
+            -refresh=false \
+            -no-color \
+            -out=tfplan
+
           terraform show -no-color tfplan > plan_output.txt
 
       - name: Upload Terraform Plan
@@ -69,8 +85,8 @@ jobs:
         with:
           name: terraform-plan
           path: |
-            infra/envs/dev/plan_output.txt
             infra/envs/dev/tfplan
+            infra/envs/dev/plan_output.txt
 
       - name: Upload Terraform Debug Log
         if: always()
