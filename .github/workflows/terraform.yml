@@ -18,6 +18,9 @@ jobs:
       run:
         shell: bash
 
+    env:
+      AWS_REGION: us-east-1
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -32,15 +35,12 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Verify AWS Credentials
         run: |
           aws --version
           aws sts get-caller-identity
-
-      - name: Terraform Version
-        run: terraform version
 
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
@@ -56,13 +56,25 @@ jobs:
       - name: Terraform Plan
         working-directory: infra/envs/dev
         env:
-          TF_LOG: INFO
+          TF_LOG: DEBUG
+          TF_LOG_PATH: terraform.log
         run: |
+          terraform plan -refresh=false -no-color
           terraform plan -refresh=false -no-color -out=tfplan
           terraform show -no-color tfplan > plan_output.txt
 
       - name: Upload Terraform Plan
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan
-          path: infra/envs/dev/plan_output.txt
+          path: |
+            infra/envs/dev/plan_output.txt
+            infra/envs/dev/tfplan
+
+      - name: Upload Terraform Debug Log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-debug-log
+          path: infra/envs/dev/terraform.log
