@@ -3,7 +3,6 @@
 *.tfstate
 *.tfstate.*
 crash.log
-terraform.tfvars
 
 # macOS
 .DS_Store

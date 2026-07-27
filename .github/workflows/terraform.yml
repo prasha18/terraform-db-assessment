@@ -51,24 +51,20 @@ jobs:
 
       - name: Terraform Init
         working-directory: infra/envs/dev
-        run: |
-          terraform init -reconfigure
+        run: terraform init -reconfigure
 
       - name: Terraform Validate
         working-directory: infra/envs/dev
-        run: |
-          terraform validate
+        run: terraform validate
 
-      - name: Show Terraform Providers
+      - name: Show Terraform Files
         working-directory: infra/envs/dev
         run: |
-          terraform providers
+          pwd
+          ls -la
 
       - name: Terraform Plan
         working-directory: infra/envs/dev
-        env:
-          TF_LOG: TRACE
-          TF_LOG_PATH: terraform.log
         run: |
           terraform plan \
             -input=false \
@@ -84,13 +80,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan
-          path: |
-            infra/envs/dev/tfplan
-            infra/envs/dev/plan_output.txt
-
-      - name: Upload Terraform Debug Log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: terraform-debug-log
-          path: infra/envs/dev/terraform.log
+          path: infra/envs/dev/plan_output.txt
